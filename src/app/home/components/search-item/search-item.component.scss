@@ -1,0 +1,16 @@
+@import 'src/stylesheets/fonts';
+
+.search-item {
+  @include roboto(15);
+  color: var(--dark-text);
+  margin-bottom: 40px;
+
+  &__title {
+    font-size: 19px;
+    margin-bottom: 5px;
+  }
+
+  &__snippet {
+    font-size: 16px;
+  }
+}

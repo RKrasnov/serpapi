@@ -1,0 +1,59 @@
+@import 'src/stylesheets/fonts.scss';
+
+.sidebar {
+  width: 80px;
+  height: 100%;
+  background-color: var(--dark-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  padding: 15px 0;
+  box-sizing: border-box;
+
+  &__item {
+    box-sizing: border-box;
+    margin-bottom: 16px;
+    padding: 0 4px;
+    width: 100%;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+
+    & > *:not(:last-child) {
+      margin-bottom: 0;
+    }
+
+    &-icon {
+      font-size: 16px;
+      padding: 12px 0 10px 0;
+    }
+
+    &-name {
+      @include roboto(11);
+
+      font-weight: normal;
+      text-align: center;
+      padding-bottom: 10px;
+      pointer-events: none;
+    }
+
+    &-selected::before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 3px;
+      left: 0;
+      height: 100%;
+      background-color: var(--accent-button-default);
+    }
+
+    &:hover {
+      background: rgba(117, 136, 217, 0.1);
+    }
+  }
+}

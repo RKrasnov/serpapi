@@ -1,0 +1,43 @@
+@import 'src/stylesheets/fonts.scss';
+
+$input-height: 40px;
+
+:host {
+  width: 100%;
+  height: $input-height;
+  position: relative;
+  display: block;
+}
+
+input {
+  @include roboto-regular-14-20;
+
+  width: 100%;
+  outline: none;
+  padding: 9px 18px;
+  transition: 0.2s border;
+  color: var(--dark-text);
+  background: var(--gray-lite);
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid var(--gray-lines);
+  border-radius: 4px;
+
+  &:hover {
+    border-color: var(--gray-soft);
+    cursor: unset;
+  }
+  &:disabled {
+    background-color: var(--gray-bg);
+    cursor: not-allowed;
+  }
+  &:active,
+  &:focus {
+    border-color: var(--cl-text-1);
+    cursor: unset;
+  }
+  &::placeholder {
+    color: var(--gray-soft);
+    font-size: 14px;
+  }
+}

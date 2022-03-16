@@ -1,0 +1,42 @@
+* {
+  &::-webkit-scrollbar-thumb {
+    background-color: #adadad;
+    visibility: hidden;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 7px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      visibility: visible;
+    }
+  }
+}
+
+.width-max {
+  width: 100%;
+}
+
+.height-max {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}

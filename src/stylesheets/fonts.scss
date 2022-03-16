@@ -1,0 +1,17 @@
+@mixin font-style-weight {
+  font-style: normal;
+  font-weight: normal;
+}
+
+@mixin roboto($font-size) {
+  font-family: Roboto, sans-serif;
+  font-size: $font-size + px;
+}
+
+@mixin roboto-regular-14-20 {
+  @include font-style-weight;
+
+  font-family: Roboto-Regular, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}

@@ -1,0 +1,21 @@
+@for $size from 0 through 50 {
+  .mr-#{$size} {
+    margin: $size + px !important;
+  }
+
+  .mr-t-#{$size} {
+    margin-top: $size + px !important;
+  }
+
+  .mr-r-#{$size} {
+    margin-right: $size + px !important;
+  }
+
+  .mr-b-#{$size} {
+    margin-bottom: $size + px !important;
+  }
+
+  .mr-l-#{$size} {
+    margin-left: $size + px !important;
+  }
+}
