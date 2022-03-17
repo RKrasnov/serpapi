@@ -1,32 +1,32 @@
 <div class="home">
-  <div class="home__search">
-    <ui-input
-      class="home__search-input mr-r-5"
-      [placeholder]="'Enter search value'"
-      [formControl]="searchControl"
-      [keys]="['Enter']"
-      (keyDown)="search()"
-    ></ui-input>
-    <fa-icon
-      class="home__search-icon mr-l-5"
-      icon="magnifying-glass"
-      (click)="search()"
-    ></fa-icon>
-  </div>
-  <div
-    *ngIf="!(searchModel.isLoading$ | async); else loader"
-    class="home__results"
-    appInfiniteScroll
-    [infiniteScrollElements]="searchModel.organicItems"
-    (infiniteScrolled)="searchModel.loadItems()"
-  >
-    <app-search-item
-      *ngFor="let item of (searchModel.organicItems$ | async)"
-      [searchItem]="item"
-    ></app-search-item>
-  </div>
+	<div class="home__search">
+		<ui-input
+				class="home__search-input mr-r-5"
+				[placeholder]="'Enter search value'"
+				[formControl]="searchControl"
+				[keys]="['Enter']"
+				(keyDown)="search()"
+		></ui-input>
+		<fa-icon
+				class="home__search-icon mr-l-5"
+				icon="magnifying-glass"
+				(click)="search()"
+		></fa-icon>
+	</div>
+	<div
+			*ngIf="!(isLoadingItems$ | async); else loader"
+			class="home__results"
+			appInfiniteScroll
+			[infiniteScrollElements]="searchItems"
+			(infiniteScrolled)="onInfiniteScrolled()"
+	>
+		<app-search-item
+				*ngFor="let item of (searchItems$ | async); trackBy: trackByFn"
+				[searchItem]="item"
+		></app-search-item>
+	</div>
 </div>
 
 <ng-template #loader>
-  <app-loader class="width-max height-max flex align-center justify-center"></app-loader>
+	<app-loader class="width-max height-max flex align-center justify-center"></app-loader>
 </ng-template>

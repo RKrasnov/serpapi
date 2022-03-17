@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-loader',
-  templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss']
+	selector: 'app-loader',
+	templateUrl: './loader.component.html',
+	styleUrls: [ './loader.component.scss' ]
 })
 export class LoaderComponent {
-  @Input() public color: string = 'var(--accent-button-default)';
+	@Input() public color: string = 'var(--accent-button-default)';
 }

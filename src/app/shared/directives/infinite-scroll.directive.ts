@@ -1,96 +1,99 @@
 import { Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, Renderer2 } from '@angular/core';
 
 export interface IIntersectionOptions {
-  root: Element | null;
-  rootMargin: string;
-  thresholds: number[];
+	root: Element | null;
+	rootMargin: string;
+	thresholds: number[];
 }
 
 export const INFINITE_SCROLL_CLASS = 'infinite-scroll-class';
 
 @Directive({
-  selector: '[appInfiniteScroll]',
+	selector: '[appInfiniteScroll]'
 })
 export class InfiniteScrollDirective implements OnDestroy {
-  @Input() public set infiniteScrollOptions(value: Partial<IIntersectionOptions>) {
-    this._infiniteScrollOptions = {
-      root: this._rootOption,
-      rootMargin: '10px',
-      thresholds: [0.5],
-      ...value,
-    };
-  }
-  public get infiniteScrollOptions(): Partial<IIntersectionOptions> {
-    return this._infiniteScrollOptions || { root: this._rootOption };
-  }
+	@Output() public infiniteScrolled: EventEmitter<void> = new EventEmitter<void>();
 
-  @Input() public set infiniteScrollElements(value: any[]) {
-    if (value.length === this._elements.length) {
-      return;
-    }
+	private _observer!: IntersectionObserver;
+	private _anchor!: Element;
+	private _elements: unknown[] = [];
 
-    if (this._observer) {
-      this._observer.disconnect();
-    }
+	constructor(private _el: ElementRef, private _renderer: Renderer2) {
+	}
 
-    this._addAnchor();
-    this._addListener();
-  }
+	@Input()
+	public set infiniteScrollElements(value: any[]) {
+		if (value.length === this._elements.length) {
+			return;
+		}
 
-  @Output() public infiniteScrolled: EventEmitter<void> = new EventEmitter<void>();
+		if (this._observer) {
+			this._observer.disconnect();
+		}
 
-  //@ts-ignore
-  private _observer: IntersectionObserver;
-  //@ts-ignore
-  private _infiniteScrollOptions: Partial<IIntersectionOptions>;
-  //@ts-ignore
-  private _anchor: Element;
-  //@ts-ignore
-  private _elements: any[] = [];
+		this._addAnchor();
+		this._addListener();
+	}
 
-  private get _isScrollable(): boolean {
-    const componentStyles = this._el.nativeElement.style;
-    const overflowValues = ['scroll', 'auto'];
+	private _infiniteScrollOptions!: Partial<IIntersectionOptions>;
 
-    return componentStyles?.overflow === 'auto' || overflowValues.includes(componentStyles?.overflowY);
-  }
+	public get infiniteScrollOptions(): Partial<IIntersectionOptions> {
+		return this._infiniteScrollOptions || { root: this._rootOption };
+	}
 
-  private get _rootOption(): Element | null {
-    return this._isScrollable ? (this._el.nativeElement as Element) : null;
-  }
+	@Input()
+	public set infiniteScrollOptions(value: Partial<IIntersectionOptions>) {
+		this._infiniteScrollOptions = {
+			root: this._rootOption,
+			rootMargin: '10px',
+			thresholds: [ 0.5 ],
+			...value
+		};
+	}
 
-  constructor(private _el: ElementRef, private _renderer: Renderer2) {}
+	private get _isScrollable(): boolean {
+		const componentStyles = this._el.nativeElement.style;
+		const overflowValues = [ 'scroll', 'auto' ];
 
-  public ngOnDestroy(): void {
-    this._observer?.disconnect();
-  }
+		return componentStyles?.overflow === 'auto' || overflowValues.includes(componentStyles?.overflowY);
+	}
 
-  private _addAnchor(): void {
-    const anchorEl: Element = this._renderer.createElement('div');
+	private get _rootOption(): Element | null {
+		return this._isScrollable
+					 ? ( this._el.nativeElement as Element )
+					 : null;
+	}
 
-    this._renderer.addClass(anchorEl, INFINITE_SCROLL_CLASS);
-    this._renderer.appendChild(this._el.nativeElement, anchorEl);
+	public ngOnDestroy(): void {
+		this._observer?.disconnect();
+	}
 
-    this._anchor = anchorEl;
-  }
+	private _addAnchor(): void {
+		const anchorEl: Element = this._renderer.createElement('div');
 
-  private _removeAnchor(): void {
-    if (this._anchor) {
-      this._renderer.removeChild(this._el.nativeElement, this._anchor);
-    }
-  }
+		this._renderer.addClass(anchorEl, INFINITE_SCROLL_CLASS);
+		this._renderer.appendChild(this._el.nativeElement, anchorEl);
 
-  private _addListener(): void {
-    this._observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) {
-        return;
-      }
+		this._anchor = anchorEl;
+	}
 
-      this._removeAnchor();
-      this.infiniteScrolled.emit();
-    }, this.infiniteScrollOptions);
+	private _removeAnchor(): void {
+		if (this._anchor) {
+			this._renderer.removeChild(this._el.nativeElement, this._anchor);
+		}
+	}
 
-    this._observer.observe(this._anchor);
-  }
+	private _addListener(): void {
+		this._observer = new IntersectionObserver(([ entry ]) => {
+			if (!entry.isIntersecting) {
+				return;
+			}
+
+			this._removeAnchor();
+			this.infiniteScrolled.emit();
+		}, this.infiniteScrollOptions);
+
+		this._observer.observe(this._anchor);
+	}
 }
 

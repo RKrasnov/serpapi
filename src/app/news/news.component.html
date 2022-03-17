@@ -1,16 +1,16 @@
 <div
-  *ngIf="!(searchModel.isLoading$ | async); else loader"
-  class="news"
-  appInfiniteScroll
-  [infiniteScrollElements]="searchModel.newsItems"
-  (infiniteScrolled)="searchModel.loadNewsItems()"
+		*ngIf="!(isLoadingItems$ | async); else loader"
+		class="news"
+		appInfiniteScroll
+		[infiniteScrollElements]="newsItems"
+		(infiniteScrolled)="onInfiniteScrolled()"
 >
-  <app-news-item
-    *ngFor="let item of (searchModel.newsItems$ | async)"
-    [newsItem]="item"
-  ></app-news-item>
+	<app-news-item
+			*ngFor="let item of (newsItems$ | async); trackBy: trackByFn"
+			[newsItem]="item"
+	></app-news-item>
 </div>
 
 <ng-template #loader>
-  <app-loader class="width-max height-max flex align-center justify-center"></app-loader>
+	<app-loader class="width-max height-max flex align-center justify-center"></app-loader>
 </ng-template>
