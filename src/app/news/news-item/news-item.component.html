@@ -1,11 +1,11 @@
 <div class="news-item">
-  <img class="news-item__img mr-b-3" [src]="newsItem.thumbnail" alt="newsItem_img">
-  <div class="news-item__source mr-l-3 mr-b-4">
-    {{ newsItem.source }}
-  </div>
-  <div class="news-item__title  mr-l-3 mr-b-2">
-    <a [href]="newsItem.link">{{ newsItem.title }}</a>
-  </div>
-  <div class="news-item__snippet  mr-l-3 mr-b-8">{{ newsItem.snippet }}</div>
-  <div class="news-item__date mr-l-3">{{ newsItem.date }}</div>
+	<img class="news-item__img mr-b-3" [src]="newsItem.thumbnail" [alt]="'newsItem_img'" >
+	<div class="news-item__source mr-l-3 mr-b-4">
+		{{ newsItem.source }}
+	</div>
+	<div class="news-item__title  mr-l-3 mr-b-2">
+		<a [href]="newsItem.link">{{ newsItem.title }}</a>
+	</div>
+	<div class="news-item__snippet  mr-l-3 mr-b-8">{{ newsItem.snippet }}</div>
+	<div class="news-item__date mr-l-3">{{ newsItem.date }}</div>
 </div>

@@ -1,40 +1,40 @@
 @import "src/stylesheets/fonts";
 
 .news-item {
-  width: 295px;
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-  border: 1px solid var(--gray-lines);
-  border-radius: 4px;
-  box-sizing: border-box;
-  overflow: hidden;
-  background-color: var(--gray-soft);
-  height: 270px;
-  position: relative;
+	width: 295px;
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+	border: 1px solid var(--gray-lines);
+	border-radius: 4px;
+	box-sizing: border-box;
+	overflow: hidden;
+	background-color: var(--gray-soft);
+	height: 270px;
+	position: relative;
 
-  &__img {
-    width: 100%;
-    max-height: 150px;
-    border-bottom: 1px solid var(--gray-lines);
-  }
+	&__img {
+		width: 100%;
+		max-height: 150px;
+		border-bottom: 1px solid var(--gray-lines);
+	}
 
-  &__source {
-    @include roboto(11);
-  }
+	&__source {
+		@include roboto(11);
+	}
 
-  &__title {
-    @include roboto(13);
-  }
+	&__title {
+		@include roboto(13);
+	}
 
-  &__snippet {
-    @include roboto(12);
-  }
+	&__snippet {
+		@include roboto(12);
+	}
 
-  &__date {
-    @include roboto(10);
+	&__date {
+		@include roboto(10);
 
-    position: absolute;
-    bottom: 3px;
-  }
+		position: absolute;
+		bottom: 3px;
+	}
 }
