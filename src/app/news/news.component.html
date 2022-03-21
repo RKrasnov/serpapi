@@ -5,12 +5,26 @@
 		[infiniteScrollElements]="newsItems"
 		(infiniteScrolled)="onInfiniteScrolled()"
 >
-	<app-news-item
-			*ngFor="let item of (newsItems$ | async); trackBy: trackByFn"
-			[newsItem]="item"
-	></app-news-item>
+	<ng-container *ngIf="newsItems?.length; else emptyResult">
+		<app-news-item
+				*ngFor="let item of (newsItems$ | async); trackBy: trackByFn"
+				[newsItem]="item"
+		></app-news-item>
+
+		<ng-container *ngIf="(isLoadingPagination$ | async)" [ngTemplateOutlet]="paginationLoader"></ng-container>
+	</ng-container>
 </div>
+
+<ng-template #emptyResult>
+	<div class="news__empty-result">
+		Sorry, no news found for {{ lastSearchValue || 'empty' }} query.
+	</div>
+</ng-template>
 
 <ng-template #loader>
 	<app-loader class="width-max height-max flex align-center justify-center"></app-loader>
+</ng-template>
+
+<ng-template #paginationLoader>
+	<app-loader class="width-max flex align-center justify-center mr-t-5 mr-b-5"></app-loader>
 </ng-template>
