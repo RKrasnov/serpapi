@@ -1,5 +1,11 @@
 export interface SearchResponse {
 	organic_results: OrganicResult[];
+	search_information: SearchInformation;
+	error?: string;
+}
+
+export interface SearchInformation {
+	total_results: number;
 }
 
 export interface OrganicResult {
@@ -14,6 +20,8 @@ export interface OrganicResult {
 
 export interface NewsSearchResponse {
 	news_results: NewsResult[];
+	search_information: SearchInformation;
+	error?: string;
 }
 
 export interface NewsResult {

@@ -20,12 +20,20 @@ export class HomeComponent implements OnInit {
 		return this._searchModel.isLoading$;
 	}
 
+	public get isLoadingPagination$(): Observable<boolean> {
+		return this._searchModel.isLoadingPagination$;
+	}
+
 	public get searchItems$(): Observable<OrganicResult[]> {
 		return this._searchModel.organicItems$;
 	}
 
 	public get searchItems(): OrganicResult[] {
 		return this._searchModel.organicItems;
+	}
+
+	public get lastSearchValue(): string {
+		return this._searchModel.lastSearchValue;
 	}
 
 	public ngOnInit(): void {

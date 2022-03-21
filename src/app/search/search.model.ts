@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, finalize, Observable, takeUntil } from 'rxjs';
 import { SearchService } from './search.service';
 import { BaseComponent } from '../base.component';
-import { NewsResult, OrganicResult } from './search.interface';
+import { NewsResult, NewsSearchResponse, OrganicResult, SearchResponse } from './search.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,19 +10,17 @@ import { NewsResult, OrganicResult } from './search.interface';
 export class SearchModel extends BaseComponent {
 	private _isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	public isLoading$: Observable<boolean> = this._isLoadingSubject.asObservable();
+	private _isLoadingPaginationSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	public isLoadingPagination$: Observable<boolean> = this._isLoadingPaginationSubject.asObservable();
 	private _organicItemsSubject: BehaviorSubject<OrganicResult[]> = new BehaviorSubject<OrganicResult[]>([]);
 	public organicItems$: Observable<OrganicResult[]> = this._organicItemsSubject.asObservable();
 	private _newsItemsSubject: BehaviorSubject<NewsResult[]> = new BehaviorSubject<NewsResult[]>([]);
 	public newsItems$: Observable<NewsResult[]> = this._newsItemsSubject.asObservable();
-	private _pageItems: number = 0;
 
-	constructor(
-		private _searchService: SearchService
-	) {
-		super();
-	}
-
+	private _pageItems: number = 0
 	private _lastSearchValue: string = '';
+	private _newsItemsCount: number | undefined;
+	private _organicItemsCount: number | undefined;
 
 	public get lastSearchValue(): string {
 		return this._lastSearchValue;
@@ -34,6 +32,12 @@ export class SearchModel extends BaseComponent {
 
 	public get newsItems(): NewsResult[] {
 		return this._newsItemsSubject.getValue();
+	}
+
+	constructor(
+		private _searchService: SearchService
+	) {
+		super();
 	}
 
 	public executeSearch(searchValue: string): void {
@@ -60,30 +64,66 @@ export class SearchModel extends BaseComponent {
 	}
 
 	public loadItems(): void {
+		// @ts-ignore
+		if (this.organicItems.length >= this._organicItemsCount) {
+			return;
+		}
+
+		this._isLoadingPaginationSubject.next(true);
+
 		const oldItems: OrganicResult[] = [ ...this.organicItems ];
 
 		this._searchService.search(this._lastSearchValue, this._pageItems)
 				.pipe(
-					finalize(() => this._isLoadingSubject.next(false)),
+					finalize(() => {
+						this._isLoadingSubject.next(false);
+						this._isLoadingPaginationSubject.next(false);
+					}),
 					takeUntil(this.componentDestroyed$)
 				)
 				.subscribe(
-					(newItems: OrganicResult[]) => this._updateSearchResultValues([ ...oldItems, ...newItems ])
+					(organicResponse: SearchResponse) => {
+						this._organicItemsCount = organicResponse.search_information.total_results;
+
+						this._updateSearchResultValues(
+							organicResponse.error
+								? []
+								: [ ...oldItems, ...organicResponse.organic_results ]
+						);
+					}
 				);
 
 		this._setNextItemsPagination();
 	}
 
 	public loadNewsItems(): void {
+		// @ts-ignore
+		if (this.newsItems.length >= this._newsItemsCount) {
+			return;
+		}
+
+		this._isLoadingPaginationSubject.next(true);
+
 		const oldNewsItems: NewsResult[] = [ ...this.newsItems ];
 
 		this._searchService.searchNews(this._lastSearchValue, this._pageItems)
 				.pipe(
-					finalize(() => this._isLoadingSubject.next(false)),
+					finalize(() => {
+						this._isLoadingSubject.next(false);
+						this._isLoadingPaginationSubject.next(false);
+					}),
 					takeUntil(this.componentDestroyed$)
 				)
 				.subscribe(
-					(newNewsItems: NewsResult[]) => this._updateNewsResultValues([ ...oldNewsItems, ...newNewsItems ])
+					(newsResponse: NewsSearchResponse) => {
+						this._newsItemsCount = newsResponse.search_information.total_results;
+
+						this._updateNewsResultValues(
+							newsResponse.error
+								? []
+								: [ ...oldNewsItems, ...newsResponse.news_results ]
+						);
+					}
 				);
 
 		this._setNextItemsPagination();
@@ -106,6 +146,8 @@ export class SearchModel extends BaseComponent {
 	}
 
 	private _resetSearchValues(): void {
+		this._newsItemsCount = undefined;
+		this._organicItemsCount = undefined;
 		this._updateSearchResultValues([]);
 		this._updateNewsResultValues([]);
 		this._resetPagination();

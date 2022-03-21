@@ -1,3 +1,5 @@
+@import "src/stylesheets/fonts.scss";
+
 :host {
 	flex: 1;
 	display: flex;
@@ -38,5 +40,10 @@
 		overflow: auto;
 		padding: 20px 20px 10px 20px;
 		box-sizing: border-box;
+
+		&-empty {
+			@include roboto(21);
+			color: var(--dark-text);
+		}
 	}
 }

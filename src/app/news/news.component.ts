@@ -19,12 +19,20 @@ export class NewsComponent implements OnInit {
 		return this._searchModel.isLoading$;
 	}
 
+	public get isLoadingPagination$(): Observable<boolean> {
+		return this._searchModel.isLoadingPagination$;
+	}
+
 	public get newsItems$(): Observable<NewsResult[]> {
 		return this._searchModel.newsItems$;
 	}
 
 	public get newsItems(): NewsResult[] {
 		return this._searchModel.newsItems;
+	}
+
+	public get lastSearchValue(): string {
+		return this._searchModel.lastSearchValue;
 	}
 
 	public ngOnInit(): void {

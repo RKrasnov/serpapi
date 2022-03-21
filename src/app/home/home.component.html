@@ -20,13 +20,27 @@
 			[infiniteScrollElements]="searchItems"
 			(infiniteScrolled)="onInfiniteScrolled()"
 	>
-		<app-search-item
-				*ngFor="let item of (searchItems$ | async); trackBy: trackByFn"
-				[searchItem]="item"
-		></app-search-item>
+		<ng-container *ngIf="searchItems?.length; else emptyResult">
+			<app-search-item
+					*ngFor="let item of (searchItems$ | async); trackBy: trackByFn"
+					[searchItem]="item"
+			></app-search-item>
+
+			<ng-container *ngIf="(isLoadingPagination$ | async)" [ngTemplateOutlet]="paginationLoader"></ng-container>
+		</ng-container>
 	</div>
 </div>
 
+<ng-template #emptyResult>
+	<div class="home__results-empty">
+		Sorry, no items found for {{ lastSearchValue || 'empty' }} query.
+	</div>
+</ng-template>
+
 <ng-template #loader>
 	<app-loader class="width-max height-max flex align-center justify-center"></app-loader>
+</ng-template>
+
+<ng-template #paginationLoader>
+	<app-loader class="width-max flex align-center justify-center mr-t-5 mr-b-5"></app-loader>
 </ng-template>
